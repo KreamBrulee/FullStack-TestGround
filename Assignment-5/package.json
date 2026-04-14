@@ -1,0 +1,14 @@
+{
+  "name": "college-enquiry",
+  "version": "1.0.0",
+  "description": "College Enquiry Form — FSDL Assignment 5",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "nodemon server.js"
+  },
+  "dependencies": {
+    "express": "^4.19.2",
+    "mongodb": "^6.5.0"
+  }
+}
