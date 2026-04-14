@@ -1,0 +1,337 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Kunal Shitole &mdash; Profile</title>
+  <style>
+    /* ---------- reset & base ---------- */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Segoe UI', system-ui, Arial, sans-serif;
+      font-size: 15px;
+      line-height: 1.65;
+      color: #1a1a2e;
+      background-color: #eef0f7;
+      background-image:
+        radial-gradient(ellipse at 15% 10%, #c7d2fe55 0%, transparent 45%),
+        radial-gradient(ellipse at 85% 80%, #ddd6fe44 0%, transparent 45%),
+        url("data:image/svg+xml,%3Csvg width='52' height='52' viewBox='0 0 52 52' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 0h1v1H0zm26 0h1v1h-1zM0 26h1v1H0zm26 26h1v1h-1zM26 26h1v1h-1z' fill='%234f46e5' fill-opacity='0.045'/%3E%3C/svg%3E");
+    }
+    a { color: #4f46e5; text-decoration: none; }
+    a:hover { text-decoration: underline; }
+
+    /* ---------- layout ---------- */
+    .page { max-width: 820px; margin: 40px auto; padding: 0 20px 60px; }
+
+    /* ---------- hero card ---------- */
+    .hero {
+      background: linear-gradient(135deg, #1e1b4b 0%, #4f46e5 100%);
+      color: #fff;
+      border-radius: 16px;
+      padding: 40px 40px 36px;
+      position: relative;
+      overflow: hidden;
+      margin-bottom: 28px;
+      display: flex;
+      align-items: center;
+      gap: 36px;
+    }
+    .hero::before {
+      content: '';
+      position: absolute;
+      left: -80px; bottom: -80px;
+      width: 280px; height: 280px;
+      background: rgba(255,255,255,.05);
+      border-radius: 50%;
+      pointer-events: none;
+    }
+    .hero::after {
+      content: '';
+      position: absolute;
+      right: -60px; top: -60px;
+      width: 260px; height: 260px;
+      background: rgba(255,255,255,.06);
+      border-radius: 50%;
+      pointer-events: none;
+    }
+
+    /* photo */
+    .hero-photo {
+      flex-shrink: 0;
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      border: 3px solid rgba(255,255,255,.35);
+      background: rgba(255,255,255,.12);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      position: relative;
+      z-index: 1;
+    }
+    .hero-photo img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border-radius: 50%;
+    }
+    .hero-photo .photo-placeholder {
+      font-size: 2.6rem;
+      opacity: .55;
+      user-select: none;
+      line-height: 1;
+    }
+
+    .hero-body { position: relative; z-index: 1; }
+    .hero-name {
+      font-size: 2.2rem;
+      font-weight: 700;
+      letter-spacing: -.02em;
+      margin-bottom: 2px;
+    }
+    .hero-title {
+      font-size: .9rem;
+      opacity: .7;
+      font-weight: 400;
+      margin-bottom: 20px;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+    }
+    .contact-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px 24px;
+      font-size: .85rem;
+      opacity: .9;
+    }
+    .contact-grid span::before { margin-right: 5px; }
+
+    /* ---------- section ---------- */
+    .section {
+      background: #fff;
+      border-radius: 12px;
+      padding: 28px 32px;
+      margin-bottom: 20px;
+      border: 1px solid #e5e5ef;
+    }
+    .section-title {
+      font-size: .72rem;
+      font-weight: 700;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      color: #4f46e5;
+      margin-bottom: 20px;
+      padding-bottom: 10px;
+      border-bottom: 2px solid #ede9fe;
+    }
+
+    /* ---------- experience / project blocks ---------- */
+    .entry { margin-bottom: 24px; }
+    .entry:last-child { margin-bottom: 0; }
+    .entry-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      flex-wrap: wrap;
+      gap: 4px;
+      margin-bottom: 2px;
+    }
+    .entry-title { font-size: 1rem; font-weight: 600; }
+    .entry-org { font-size: .88rem; color: #6366f1; font-weight: 500; }
+    .entry-meta { font-size: .8rem; color: #888; white-space: nowrap; }
+    .entry ul {
+      padding-left: 18px;
+      margin-top: 6px;
+      color: #444;
+      font-size: .9rem;
+    }
+    .entry ul li { margin-bottom: 3px; }
+
+    /* ---------- tag pills ---------- */
+    .tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
+    .tag {
+      font-size: .75rem;
+      font-weight: 500;
+      background: #ede9fe;
+      color: #4338ca;
+      border-radius: 99px;
+      padding: 2px 10px;
+    }
+
+    /* ---------- education rows ---------- */
+    .edu-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      flex-wrap: wrap;
+      gap: 2px;
+      padding: 10px 0;
+      border-bottom: 1px solid #f0f0f5;
+    }
+    .edu-row:last-child { border-bottom: none; padding-bottom: 0; }
+    .edu-degree { font-weight: 600; font-size: .95rem; }
+    .edu-school { font-size: .85rem; color: #666; }
+    .edu-year { font-size: .82rem; color: #4f46e5; font-weight: 500; white-space: nowrap; }
+
+    /* ---------- footer ---------- */
+    footer {
+      text-align: center;
+      margin-top: 36px;
+      font-size: .8rem;
+      color: #aaa;
+    }
+    footer strong { color: #4f46e5; }
+  </style>
+</head>
+<body>
+
+<div class="page">
+
+  <!-- ── Hero ── -->
+  <header class="hero">
+
+    <!-- Replace src with your actual photo path e.g. src="photo.jpg" -->
+    <figure class="hero-photo">
+      <img src="photo.jpg" alt="Photo of Kunal Shitole"
+           onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+      <span class="photo-placeholder" style="display:none">&#128100;</span>
+    </figure>
+
+    <div class="hero-body">
+      <p class="hero-title">Computer Engineer</p>
+      <h1 class="hero-name">Kunal Shitole</h1>
+      <div class="contact-grid">
+        <span>&#128222; +91 8459646337</span>
+        <span>&#9993; <a href="mailto:the.kunalshitole@gmail.com" style="color:#c7d2fe">the.kunalshitole@gmail.com</a></span>
+        <span>&#127968; Bibvewadi, Pune, Maharashtra</span>
+        <span>&#127760; <a href="https://potassulfide.com" target="_blank" style="color:#c7d2fe">potassulfide.com</a></span>
+        <span>&#128025; <a href="https://github.com/KreamBrulee" target="_blank" style="color:#c7d2fe">github.com/KreamBrulee</a></span>
+      </div>
+    </div>
+
+  </header>
+
+  <!-- ── Experience ── -->
+  <section class="section">
+    <h2 class="section-title">Professional Experience</h2>
+
+    <div class="entry">
+      <div class="entry-header">
+        <div>
+          <div class="entry-title">Research Internship</div>
+          <div class="entry-org">PCCOE &mdash; under Dr. Pooja Bidwai</div>
+        </div>
+        <span class="entry-meta">40 Days</span>
+      </div>
+      <ul>
+        <li>Worked on early-stage <strong>Diabetic Retinopathy Detection</strong> using retinal scans and a custom copyrighted dataset.</li>
+        <li>Designed and implemented a custom <abbr title="Convolutional Neural Network">CNN</abbr> model benchmarked against <cite>ResNet</cite> and <cite>VGG</cite>.</li>
+        <li>Implemented <strong>Grad-CAM</strong> to make model predictions interpretable and user-friendly.</li>
+      </ul>
+    </div>
+
+    <div class="entry">
+      <div class="entry-header">
+        <div>
+          <div class="entry-title">Consultancy Project</div>
+          <div class="entry-org">ChiselByte, Pune</div>
+        </div>
+        <span class="entry-meta">Ongoing</span>
+      </div>
+      <ul>
+        <li>Developing an <strong>Automated Interview System</strong> for HR teams.</li>
+        <li>Covers application processing, candidate selection suggestions, and interview report generation.</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- ── Projects ── -->
+  <section class="section">
+    <h2 class="section-title">Projects</h2>
+
+    <div class="entry">
+      <div class="entry-title">Diabetic Retinopathy Detection with XAI</div>
+      <ul>
+        <li>Custom <abbr title="Convolutional Neural Network">CNN</abbr> designed to mimic ResNet and VGG architectures.</li>
+        <li>Comparative study across all five stages of Diabetic Retinopathy classification.</li>
+        <li>Grad-CAM integration for explainable AI output.</li>
+      </ul>
+      <div class="tags">
+        <span class="tag">Python</span>
+        <span class="tag">PyTorch</span>
+        <span class="tag">Grad-CAM</span>
+        <span class="tag">CNN</span>
+      </div>
+    </div>
+
+    <div class="entry">
+      <div class="entry-title">Rice Grain Classifier</div>
+      <ul>
+        <li><abbr title="Convolutional Neural Network">CNN</abbr> with contour mapping to detect and classify all objects in a frame.</li>
+        <li>Classifies into impurities or rice types: <em>Basmati</em>, <em>Abiro</em>, <em>Red Cargo</em>.</li>
+      </ul>
+      <div class="tags">
+        <span class="tag">Python</span>
+        <span class="tag">PyTorch</span>
+        <span class="tag">OpenCV</span>
+        <span class="tag">Keras</span>
+      </div>
+    </div>
+
+    <div class="entry">
+      <div class="entry-title">AI-Assisted Search Engine for YouTube Videos</div>
+      <ul>
+        <li>Used an <abbr title="Large Language Model">LLM</abbr> to convert YouTube transcripts into vector embeddings.</li>
+        <li>Built a vector database and applied cosine similarity for semantic search.</li>
+      </ul>
+      <div class="tags">
+        <span class="tag">Python</span>
+        <span class="tag">JavaScript</span>
+        <span class="tag">HTML</span>
+        <span class="tag">PyTorch</span>
+        <span class="tag">SentenceTransformers</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Education ── -->
+  <section class="section">
+    <h2 class="section-title">Education</h2>
+
+    <div class="edu-row">
+      <div>
+        <div class="edu-degree">B.Tech Computer Science <small>(3rd Year, Ongoing)</small></div>
+        <div class="edu-school">PCCoE, Pune &mdash; Pune University</div>
+      </div>
+      <span class="edu-year">Ongoing</span>
+    </div>
+
+    <div class="edu-row">
+      <div>
+        <div class="edu-degree">Higher Secondary <abbr title="Higher Secondary Certificate">(HSC)</abbr></div>
+        <div class="edu-school">Hind English Medium School &mdash; CBSE</div>
+      </div>
+      <span class="edu-year">Jun 2023</span>
+    </div>
+
+    <div class="edu-row">
+      <div>
+        <div class="edu-degree">Secondary School <abbr title="Secondary School Certificate">(SSC)</abbr></div>
+        <div class="edu-school">The Bishop School &mdash; ICSE</div>
+      </div>
+      <span class="edu-year">Jun 2021</span>
+    </div>
+  </section>
+
+</div><!-- /page -->
+
+<footer>
+  <address>
+    Crafted by <strong>Kunal Shitole</strong> &mdash; FSDL Assignment 2 &mdash; 2026
+  </address>
+</footer>
+
+</body>
+</html>
