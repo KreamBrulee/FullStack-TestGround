@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>DRAPE &mdash; Fashion Store</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+  <!-- ── Navbar ── -->
+  <nav class="navbar">
+    <a class="nav-logo" href="#">DRAPE</a>
+    <div class="nav-right">
+      <span class="nav-icon" title="Wishlist">&#9825;</span>
+      <span class="nav-icon cart-icon" title="Cart">
+        &#128722;
+        <span class="cart-badge" id="cartBadge">0</span>
+      </span>
+    </div>
+  </nav>
+
+  <!-- ── Hero Banner ── -->
+  <section class="hero">
+    <div class="hero-inner">
+      <p class="hero-eyebrow">New Season Drop</p>
+      <h1 class="hero-heading">Style Without<br>Compromise.</h1>
+      <a href="#products" class="btn-primary">Shop Now</a>
+    </div>
+  </section>
+
+  <!-- ── Controls ── -->
+  <div class="controls-bar" id="products">
+    <div class="controls-left">
+
+      <!-- Search -->
+      <div class="search-wrap">
+        <span class="search-icon">&#128269;</span>
+        <input
+          type="search"
+          id="searchInput"
+          class="search-input"
+          placeholder="Search products…"
+          autocomplete="off"
+        >
+      </div>
+
+      <!-- Category filter -->
+      <div class="filter-group" id="categoryFilters">
+        <button class="filter-btn active" data-filter="all">All</button>
+        <button class="filter-btn" data-filter="tops">Tops</button>
+        <button class="filter-btn" data-filter="bottoms">Bottoms</button>
+        <button class="filter-btn" data-filter="outerwear">Outerwear</button>
+        <button class="filter-btn" data-filter="accessories">Accessories</button>
+        <button class="filter-btn" data-filter="footwear">Footwear</button>
+      </div>
+
+    </div>
+
+    <div class="controls-right">
+      <!-- Sort -->
+      <select id="sortSelect" class="sort-select">
+        <option value="default">Sort: Featured</option>
+        <option value="price-asc">Price: Low to High</option>
+        <option value="price-desc">Price: High to Low</option>
+        <option value="name-asc">Name: A &rarr; Z</option>
+        <option value="name-desc">Name: Z &rarr; A</option>
+        <option value="rating">Top Rated</option>
+      </select>
+
+      <!-- Results count -->
+      <span class="results-count" id="resultsCount"></span>
+    </div>
+  </div>
+
+  <!-- ── Product Grid ── -->
+  <main class="product-grid" id="productGrid">
+    <!-- Cards injected by app.js -->
+  </main>
+
+  <!-- ── Empty state ── -->
+  <div class="empty-state hidden" id="emptyState">
+    <div class="empty-icon">&#128269;</div>
+    <h2>No products found</h2>
+    <p>Try adjusting your search or filters.</p>
+    <button class="btn-primary" id="clearFiltersBtn">Clear Filters</button>
+  </div>
+
+  <!-- ── Cart Toast ── -->
+  <div class="toast hidden" id="toast"></div>
+
+  <!-- ── Footer ── -->
+  <footer class="site-footer">
+    <p><strong>DRAPE</strong> &mdash; FSDL Assignment 3 &mdash; Kunal Shitole &mdash; 2026</p>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>
