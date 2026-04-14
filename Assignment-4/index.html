@@ -1,0 +1,179 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>WeatherView &mdash; Dashboard</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+  <!-- ── Navbar ── -->
+  <nav class="navbar">
+    <span class="nav-logo">&#9729; WeatherView</span>
+    <div class="nav-right">
+      <span id="lastUpdated" class="last-updated"></span>
+      <button class="btn-refresh" id="refreshBtn" title="Refresh">&#8635; Refresh</button>
+    </div>
+  </nav>
+
+  <!-- ── Search Bar ── -->
+  <div class="search-bar">
+    <div class="search-wrap">
+      <span class="search-icon">&#128205;</span>
+      <input
+        type="text"
+        id="cityInput"
+        class="search-input"
+        placeholder="Search city… (e.g. Mumbai, London, Tokyo)"
+        autocomplete="off"
+      >
+      <button class="search-btn" id="searchBtn">Search</button>
+    </div>
+    <!-- Quick cities -->
+    <div class="quick-cities" id="quickCities">
+      <button class="city-pill active" data-city="Pune">Pune</button>
+      <button class="city-pill" data-city="Mumbai">Mumbai</button>
+      <button class="city-pill" data-city="Delhi">Delhi</button>
+      <button class="city-pill" data-city="London">London</button>
+      <button class="city-pill" data-city="Tokyo">Tokyo</button>
+      <button class="city-pill" data-city="New York">New York</button>
+    </div>
+  </div>
+
+  <!-- ── Loading ── -->
+  <div class="loading hidden" id="loading">
+    <div class="spinner"></div>
+    <p>Fetching weather data…</p>
+  </div>
+
+  <!-- ── Error ── -->
+  <div class="error-state hidden" id="errorState">
+    <div class="error-icon">&#9888;</div>
+    <p id="errorMsg">Something went wrong.</p>
+  </div>
+
+  <!-- ── Dashboard ── -->
+  <div class="dashboard hidden" id="dashboard">
+
+    <!-- City heading -->
+    <div class="city-header">
+      <div>
+        <h1 class="city-name" id="cityName">—</h1>
+        <p class="city-sub" id="citySub">—</p>
+      </div>
+      <div class="current-temp-block">
+        <span class="current-emoji" id="currentEmoji">—</span>
+        <div>
+          <div class="current-temp" id="currentTemp">—</div>
+          <div class="current-desc" id="currentDesc">—</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── Stat Cards ── -->
+    <div class="stat-grid">
+      <div class="stat-card">
+        <div class="stat-icon">&#127757;</div>
+        <div class="stat-label">Feels Like</div>
+        <div class="stat-value" id="statFeels">—</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon">&#128167;</div>
+        <div class="stat-label">Humidity</div>
+        <div class="stat-value" id="statHumidity">—</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon">&#127788;</div>
+        <div class="stat-label">Wind Speed</div>
+        <div class="stat-value" id="statWind">—</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon">&#9748;</div>
+        <div class="stat-label">Precipitation</div>
+        <div class="stat-value" id="statPrecip">—</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon">&#127774;</div>
+        <div class="stat-label">UV Index</div>
+        <div class="stat-value" id="statUV">—</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon">&#128065;</div>
+        <div class="stat-label">Visibility</div>
+        <div class="stat-value" id="statVis">—</div>
+      </div>
+    </div>
+
+    <!-- ── Charts Row 1 ── -->
+    <div class="charts-row">
+
+      <!-- 24-hour temperature line chart -->
+      <div class="chart-card wide">
+        <div class="chart-header">
+          <h2 class="chart-title">24-Hour Temperature</h2>
+          <div class="toggle-group" id="tempToggle">
+            <button class="toggle-btn active" data-key="temp">Temperature</button>
+            <button class="toggle-btn" data-key="feels">Feels Like</button>
+          </div>
+        </div>
+        <div class="chart-wrap">
+          <canvas id="tempChart"></canvas>
+        </div>
+      </div>
+
+      <!-- Precipitation bar chart -->
+      <div class="chart-card">
+        <div class="chart-header">
+          <h2 class="chart-title">Hourly Precipitation</h2>
+        </div>
+        <div class="chart-wrap">
+          <canvas id="precipChart"></canvas>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- ── Charts Row 2 ── -->
+    <div class="charts-row">
+
+      <!-- 7-day forecast -->
+      <div class="chart-card wide">
+        <div class="chart-header">
+          <h2 class="chart-title">7-Day Forecast</h2>
+        </div>
+        <div class="chart-wrap">
+          <canvas id="forecastChart"></canvas>
+        </div>
+      </div>
+
+      <!-- Wind speed doughnut -->
+      <div class="chart-card">
+        <div class="chart-header">
+          <h2 class="chart-title">Wind &amp; Gusts</h2>
+        </div>
+        <div class="chart-wrap chart-wrap--sm">
+          <canvas id="windChart"></canvas>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- ── 7-Day Forecast Cards ── -->
+    <div class="chart-card" style="margin-bottom: 32px;">
+      <div class="chart-header"><h2 class="chart-title">Weekly Overview</h2></div>
+      <div class="forecast-row" id="forecastRow"></div>
+    </div>
+
+  </div><!-- /dashboard -->
+
+  <!-- ── Footer ── -->
+  <footer class="site-footer">
+    <p>Data &mdash; <a href="https://open-meteo.com" target="_blank">Open-Meteo</a> &nbsp;&middot;&nbsp;
+    <strong>WeatherView</strong> &mdash; FSDL Assignment 4 &mdash; Kunal Shitole &mdash; 2026</p>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
