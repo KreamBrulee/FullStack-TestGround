@@ -1,0 +1,464 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>MediBook &mdash; Doctor Appointments</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+  <!-- ── Navbar ── -->
+  <nav class="navbar">
+    <div class="nav-inner">
+      <div class="nav-logo">&#9877; MediBook</div>
+      <div class="nav-tabs">
+        <button class="nav-tab active" data-tab="booking">Book Appointment</button>
+        <button class="nav-tab" data-tab="admin">Admin Panel</button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- ══════════════════════════════════════════════════
+       TAB 1 — PATIENT BOOKING
+  ══════════════════════════════════════════════════ -->
+  <div id="tab-booking" class="tab-page">
+
+    <!-- Hero -->
+    <div class="hero">
+      <div class="hero-inner">
+        <p class="hero-eyebrow">Pune &bull; 8 Specialists Available</p>
+        <h1 class="hero-heading">Book a Doctor<br>Appointment Online</h1>
+        <p class="hero-sub">Skip the wait. Choose your doctor, pick a slot, confirm instantly.</p>
+      </div>
+    </div>
+
+    <div class="page-body">
+
+      <!-- Step 1 — Choose Doctor -->
+      <section class="step-card" id="step1">
+        <div class="step-header">
+          <span class="step-num">1</span>
+          <h2 class="step-title">Choose a Doctor</h2>
+        </div>
+
+        <!-- Specialty filter -->
+        <div class="specialty-filters" id="specialtyFilters">
+          <button class="spec-btn active" data-spec="all">All</button>
+        </div>
+
+        <div class="doctor-grid" id="doctorGrid">
+          <p class="placeholder">Loading doctors…</p>
+        </div>
+      </section>
+
+      <!-- Step 2 — Pick Date & Slot -->
+      <section class="step-card dimmed" id="step2">
+        <div class="step-header">
+          <span class="step-num">2</span>
+          <h2 class="step-title">Pick Date &amp; Time Slot</h2>
+        </div>
+        <div class="date-slot-row">
+          <div class="field">
+            <label for="apptDate">Date</label>
+            <input type="date" id="apptDate">
+          </div>
+          <div class="slots-wrap">
+            <p class="slot-hint" id="slotHint">Select a doctor and date first.</p>
+            <div class="slot-grid" id="slotGrid"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Step 3 — Patient Details -->
+      <section class="step-card dimmed" id="step3">
+        <div class="step-header">
+          <span class="step-num">3</span>
+          <h2 class="step-title">Your Details</h2>
+        </div>
+        <form id="bookingForm" novalidate>
+          <div class="form-row">
+            <div class="field">
+              <label for="patientName">Full Name <span class="req">*</span></label>
+              <input type="text" id="patientName" placeholder="e.g. Kunal Shitole" required>
+            </div>
+            <div class="field">
+              <label for="patientEmail">Email <span class="req">*</span></label>
+              <input type="email" id="patientEmail" placeholder="you@example.com" required>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="field">
+              <label for="patientPhone">Phone</label>
+              <input type="tel" id="patientPhone" placeholder="+91 98765 43210">
+            </div>
+            <div class="field">
+              <label for="patientAge">Age</label>
+              <input type="number" id="patientAge" min="1" max="120" placeholder="25">
+            </div>
+          </div>
+          <div class="field">
+            <label for="reason">Reason for Visit</label>
+            <textarea id="reason" rows="3" placeholder="Brief description of symptoms or concern…"></textarea>
+          </div>
+
+          <!-- Booking summary -->
+          <div class="booking-summary hidden" id="bookingSummary"></div>
+
+          <div class="alert hidden" id="bookingAlert"></div>
+          <button type="submit" class="btn-primary" id="bookBtn">Confirm Appointment</button>
+        </form>
+      </section>
+
+    </div><!-- /page-body -->
+  </div><!-- /tab-booking -->
+
+  <!-- ══════════════════════════════════════════════════
+       TAB 2 — ADMIN PANEL
+  ══════════════════════════════════════════════════ -->
+  <div id="tab-admin" class="tab-page hidden">
+
+    <div class="admin-header">
+      <h1 class="admin-title">&#128202; Admin Panel</h1>
+      <div class="admin-controls">
+        <select id="adminFilter" class="select-sm">
+          <option value="">All Statuses</option>
+          <option value="confirmed">Confirmed</option>
+          <option value="completed">Completed</option>
+          <option value="cancelled">Cancelled</option>
+        </select>
+        <input type="date" id="adminDateFilter" class="input-sm">
+        <button class="btn-outline" id="adminRefresh">&#8635; Refresh</button>
+      </div>
+    </div>
+
+    <!-- Stats row -->
+    <div class="stats-row" id="statsRow">
+      <div class="stat-card"><div class="stat-val" id="statTotal">—</div><div class="stat-lbl">Total</div></div>
+      <div class="stat-card confirmed"><div class="stat-val" id="statConfirmed">—</div><div class="stat-lbl">Confirmed</div></div>
+      <div class="stat-card completed"><div class="stat-val" id="statCompleted">—</div><div class="stat-lbl">Completed</div></div>
+      <div class="stat-card cancelled"><div class="stat-val" id="statCancelled">—</div><div class="stat-lbl">Cancelled</div></div>
+    </div>
+
+    <div class="table-wrap">
+      <table class="data-table" id="adminTable">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Patient</th>
+            <th>Doctor</th>
+            <th>Specialty</th>
+            <th>Date &amp; Slot</th>
+            <th>Fee</th>
+            <th>Status</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody id="adminBody">
+          <tr class="placeholder-row"><td colspan="8">Loading…</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+  </div><!-- /tab-admin -->
+
+  <!-- ── Footer ── -->
+  <footer class="site-footer">
+    <p><strong>MediBook</strong> &mdash; FSDL Assignment 6 &mdash; Kunal Shitole &mdash; 2026</p>
+    <p class="footer-sub">Node.js &bull; Express &bull; MongoDB</p>
+  </footer>
+
+<script>
+/* ══════════════════════════════════════════════════════
+   app — MediBook frontend
+══════════════════════════════════════════════════════ */
+
+// ── Helpers ───────────────────────────────────────────
+const $  = id  => document.getElementById(id);
+const qs = sel => document.querySelector(sel);
+
+function esc(s) {
+  return String(s || "")
+    .replace(/&/g,"&amp;").replace(/</g,"&lt;")
+    .replace(/>/g,"&gt;").replace(/"/g,"&quot;");
+}
+
+function setAlert(id, msg, type) {
+  const el = $(id);
+  el.textContent = msg;
+  el.className = "alert" + (msg ? " " + type : " hidden");
+}
+
+function fmtDate(d) {
+  return new Date(d).toLocaleDateString("en-IN", { day:"2-digit", month:"short", year:"numeric" });
+}
+
+// ── Tab switching ──────────────────────────────────────
+document.querySelectorAll(".nav-tab").forEach(btn => {
+  btn.addEventListener("click", () => {
+    document.querySelectorAll(".nav-tab").forEach(b => b.classList.remove("active"));
+    document.querySelectorAll(".tab-page").forEach(p => p.classList.add("hidden"));
+    btn.classList.add("active");
+    $("tab-" + btn.dataset.tab).classList.remove("hidden");
+    if (btn.dataset.tab === "admin") loadAdmin();
+  });
+});
+
+/* ══════════════════════ BOOKING TAB ══════════════════ */
+
+let selectedDoctor = null;
+let selectedSlot   = null;
+let allDoctors     = [];
+
+// ── Load doctors ───────────────────────────────────────
+async function loadDoctors() {
+  const res  = await fetch("/api/doctors");
+  const json = await res.json();
+  allDoctors = json.data;
+  renderSpecialtyFilters();
+  renderDoctors(allDoctors);
+}
+
+function renderSpecialtyFilters() {
+  const specs = ["all", ...new Set(allDoctors.map(d => d.specialty))];
+  const wrap  = $("specialtyFilters");
+  wrap.innerHTML = specs.map(s =>
+    `<button class="spec-btn${s==="all"?" active":""}" data-spec="${esc(s)}">${esc(s==="all"?"All":s)}</button>`
+  ).join("");
+  wrap.addEventListener("click", e => {
+    const btn = e.target.closest(".spec-btn");
+    if (!btn) return;
+    wrap.querySelectorAll(".spec-btn").forEach(b => b.classList.remove("active"));
+    btn.classList.add("active");
+    const spec = btn.dataset.spec;
+    renderDoctors(spec === "all" ? allDoctors : allDoctors.filter(d => d.specialty === spec));
+  });
+}
+
+function renderDoctors(docs) {
+  const grid = $("doctorGrid");
+  if (docs.length === 0) {
+    grid.innerHTML = `<p class="placeholder">No doctors found.</p>`;
+    return;
+  }
+  grid.innerHTML = docs.map(d => `
+    <div class="doctor-card${selectedDoctor?._id === d._id ? " selected" : ""}" data-id="${esc(d._id)}">
+      <div class="doc-avatar">${esc(d.avatar)}</div>
+      <div class="doc-info">
+        <div class="doc-name">${esc(d.name)}</div>
+        <div class="doc-spec">${esc(d.specialty)}</div>
+        <div class="doc-meta">${d.experience} yrs exp &nbsp;&bull;&nbsp; ₹${d.fee}</div>
+      </div>
+      <div class="doc-select-icon">&#10003;</div>
+    </div>
+  `).join("");
+
+  grid.querySelectorAll(".doctor-card").forEach(card => {
+    card.addEventListener("click", () => {
+      grid.querySelectorAll(".doctor-card").forEach(c => c.classList.remove("selected"));
+      card.classList.add("selected");
+      selectedDoctor = allDoctors.find(d => d._id === card.dataset.id);
+      selectedSlot   = null;
+      unlock($("step2"));
+      loadSlots();
+      updateSummary();
+    });
+  });
+}
+
+// ── Slots ──────────────────────────────────────────────
+$("apptDate").addEventListener("change", loadSlots);
+
+// Set min date to today
+$("apptDate").min = new Date().toISOString().split("T")[0];
+
+async function loadSlots() {
+  const date = $("apptDate").value;
+  if (!selectedDoctor || !date) return;
+
+  const grid = $("slotGrid");
+  const hint = $("slotHint");
+  hint.textContent = "Loading slots…";
+  grid.innerHTML = "";
+  selectedSlot = null;
+  updateSummary();
+
+  const res  = await fetch(`/api/slots?doctorId=${selectedDoctor._id}&date=${date}`);
+  const json = await res.json();
+
+  if (!json.ok || json.data.length === 0) {
+    hint.textContent = "No slots available on this date. Try another day.";
+    return;
+  }
+  hint.textContent = "Select a time slot:";
+  grid.innerHTML = json.data.map(s =>
+    `<button class="slot-btn" data-slot="${esc(s)}">${esc(s)}</button>`
+  ).join("");
+
+  grid.querySelectorAll(".slot-btn").forEach(btn => {
+    btn.addEventListener("click", () => {
+      grid.querySelectorAll(".slot-btn").forEach(b => b.classList.remove("active"));
+      btn.classList.add("active");
+      selectedSlot = btn.dataset.slot;
+      unlock($("step3"));
+      updateSummary();
+    });
+  });
+}
+
+function updateSummary() {
+  const box  = $("bookingSummary");
+  const date = $("apptDate").value;
+  if (!selectedDoctor || !date || !selectedSlot) { box.classList.add("hidden"); return; }
+  box.classList.remove("hidden");
+  box.innerHTML = `
+    <div class="summary-row"><span>Doctor</span><strong>${esc(selectedDoctor.name)}</strong></div>
+    <div class="summary-row"><span>Specialty</span><strong>${esc(selectedDoctor.specialty)}</strong></div>
+    <div class="summary-row"><span>Date</span><strong>${fmtDate(date)}</strong></div>
+    <div class="summary-row"><span>Time</span><strong>${esc(selectedSlot)}</strong></div>
+    <div class="summary-row"><span>Consultation Fee</span><strong>₹${selectedDoctor.fee}</strong></div>
+  `;
+}
+
+// ── Book appointment ───────────────────────────────────
+$("bookingForm").addEventListener("submit", async e => {
+  e.preventDefault();
+  setAlert("bookingAlert","","");
+
+  if (!selectedDoctor) return setAlert("bookingAlert","Please select a doctor.","error");
+  if (!$("apptDate").value) return setAlert("bookingAlert","Please select a date.","error");
+  if (!selectedSlot) return setAlert("bookingAlert","Please select a time slot.","error");
+
+  const btn = $("bookBtn");
+  btn.disabled = true;
+  btn.textContent = "Booking…";
+
+  const body = {
+    patientName:  $("patientName").value.trim(),
+    patientEmail: $("patientEmail").value.trim(),
+    patientPhone: $("patientPhone").value.trim(),
+    patientAge:   $("patientAge").value,
+    doctorId:     selectedDoctor._id,
+    date:         $("apptDate").value,
+    slot:         selectedSlot,
+    reason:       $("reason").value.trim(),
+  };
+
+  try {
+    const res  = await fetch("/api/appointments", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(body),
+    });
+    const json = await res.json();
+    if (json.ok) {
+      setAlert("bookingAlert",
+        `✅ Appointment confirmed with ${selectedDoctor.name} on ${fmtDate(body.date)} at ${selectedSlot}.`,
+        "success");
+      e.target.reset();
+      selectedSlot = null;
+      $("slotGrid").querySelectorAll(".slot-btn").forEach(b => b.classList.remove("active"));
+      $("bookingSummary").classList.add("hidden");
+      lock($("step3"));
+    } else {
+      setAlert("bookingAlert", "⚠️ " + json.error, "error");
+    }
+  } catch {
+    setAlert("bookingAlert", "⚠️ Network error.", "error");
+  } finally {
+    btn.disabled = false;
+    btn.textContent = "Confirm Appointment";
+  }
+});
+
+function unlock(el) { el.classList.remove("dimmed"); }
+function lock(el)   { el.classList.add("dimmed"); }
+
+/* ══════════════════════ ADMIN TAB ════════════════════ */
+
+async function loadAdmin() {
+  const status = $("adminFilter").value;
+  const date   = $("adminDateFilter").value;
+  const params = new URLSearchParams();
+  if (status) params.set("status", status);
+  if (date)   params.set("date", date);
+
+  const tbody = $("adminBody");
+  tbody.innerHTML = `<tr class="placeholder-row"><td colspan="8">Loading…</td></tr>`;
+
+  try {
+    const res  = await fetch("/api/appointments?" + params);
+    const json = await res.json();
+    const data = json.data || [];
+
+    // Stats
+    $("statTotal").textContent     = data.length;
+    $("statConfirmed").textContent = data.filter(a => a.status==="confirmed").length;
+    $("statCompleted").textContent = data.filter(a => a.status==="completed").length;
+    $("statCancelled").textContent = data.filter(a => a.status==="cancelled").length;
+
+    if (data.length === 0) {
+      tbody.innerHTML = `<tr class="placeholder-row"><td colspan="8">No appointments found.</td></tr>`;
+      return;
+    }
+
+    tbody.innerHTML = data.map((a, i) => `
+      <tr>
+        <td>${i+1}</td>
+        <td>
+          <strong>${esc(a.patientName)}</strong><br>
+          <small>${esc(a.patientEmail)}</small>
+        </td>
+        <td>${esc(a.doctorName)}</td>
+        <td><span class="spec-tag">${esc(a.specialty)}</span></td>
+        <td>${fmtDate(a.date)}<br><small>${esc(a.slot)}</small></td>
+        <td>₹${a.fee}</td>
+        <td><span class="status-badge status-${esc(a.status)}">${esc(a.status)}</span></td>
+        <td class="action-cell">
+          ${a.status === "confirmed" ? `
+            <button class="btn-sm btn-complete" onclick="updateStatus('${a._id}','completed',this)">&#10003;</button>
+            <button class="btn-sm btn-cancel"   onclick="updateStatus('${a._id}','cancelled',this)">&#10005;</button>
+          ` : ""}
+          <button class="btn-sm btn-delete" onclick="deleteAppt('${a._id}',this)">&#128465;</button>
+        </td>
+      </tr>
+    `).join("");
+  } catch {
+    tbody.innerHTML = `<tr class="placeholder-row"><td colspan="8">Failed to load.</td></tr>`;
+  }
+}
+
+async function updateStatus(id, status, btn) {
+  btn.disabled = true;
+  try {
+    const res  = await fetch(`/api/appointments/${id}`, {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ status }),
+    });
+    const json = await res.json();
+    if (json.ok) loadAdmin();
+    else alert("Error: " + json.error);
+  } catch { alert("Network error."); btn.disabled = false; }
+}
+
+async function deleteAppt(id, btn) {
+  if (!confirm("Permanently delete this appointment?")) return;
+  btn.disabled = true;
+  try {
+    const res  = await fetch(`/api/appointments/${id}`, { method: "DELETE" });
+    const json = await res.json();
+    if (json.ok) loadAdmin();
+    else alert("Error: " + json.error);
+  } catch { alert("Network error."); btn.disabled = false; }
+}
+
+$("adminRefresh").addEventListener("click", loadAdmin);
+$("adminFilter").addEventListener("change", loadAdmin);
+$("adminDateFilter").addEventListener("change", loadAdmin);
+
+// ── Init ───────────────────────────────────────────────
+loadDoctors();
+</script>
+</body>
+</html>
